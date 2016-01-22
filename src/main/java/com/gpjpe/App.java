@@ -20,6 +20,5 @@ public class App {
         TweetsHTable tweetsHTable = new TweetsHTable(configuration);
 
         tweetsHTable.initializeSchema();
-
     }
 }
