@@ -17,9 +17,9 @@ public class App {
 
         Configuration configuration = HBaseConfiguration.create();
 
-        TweetsHTable tweetsHTable = new TweetsHTable(configuration);
+      //  TweetsHTable tweetsHTable = new TweetsHTable(configuration);
 
-        tweetsHTable.initializeSchema();
+       // tweetsHTable.initializeSchema();
 
     }
 }
