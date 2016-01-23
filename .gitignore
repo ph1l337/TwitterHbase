@@ -7,3 +7,5 @@ log.txt*
 .classpath
 .project
 .settings
+
+src/main/resources/hbase-site.xml

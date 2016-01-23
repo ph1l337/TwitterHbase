@@ -1,6 +1,8 @@
 package com.gpjpe.domain;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
@@ -67,6 +69,8 @@ public class TweetsHTable {
 		byte[] rowKey;
 		Put put;
 		HTable table = new HTable(this.conf, Bytes.toBytes(Schema.TABLE_NAME));
+		List<Put> puts = new ArrayList<Put>();
+		long batchSize = 1000;
 		long count = 0;
 		
 		while ((windowSummary = summaryReader.next()) != null) {
@@ -85,8 +89,21 @@ public class TweetsHTable {
 			CF = Bytes.toBytes(Schema.CF_META);
 			
 			put.add(CF, Bytes.toBytes(Schema.COLUMN_META_LANG), Bytes.toBytes(windowSummary.getLanguage()));
-			table.put(put);
+			puts.add(put);
+			
+			if (count % batchSize == 0) {
+				table.put(puts);
+				table.flushCommits();
+				puts.clear();
+			}
+			
 			count++;
+		}
+		
+		if (puts.size() > 0) {
+			table.put(puts);
+			table.flushCommits();
+			puts.clear();			
 		}
 		
 		LOGGER.info(String.format("Inserted %d records", count));
