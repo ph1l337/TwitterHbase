@@ -3,10 +3,10 @@
 
 ## Design Decisions for creating the Hbase Schema
 
-                  |(CF)hashTag|(CF)meta|
-----------------------|xxx|yyy|zzz|  lang  | 
-(rowKey)timestamplang | 3 | 2 | 1 |   en   |
-----------------------|-----------|--------|
+|                      |(CF)hashTag|(CF)meta|
+|----------------------|xxx|yyy|zzz|  lang  | 
+|(rowKey)timestamplang | 3 | 2 | 1 |   en   |
+|----------------------|-----------|--------|
 ...                   |  ...      |  ...   |
 
 
