@@ -3,9 +3,7 @@ package com.gpjpe.domain;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.collections.MapIterator;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
@@ -33,11 +31,15 @@ public class TweetsHTable {
 		HBaseAdmin admin = new HBaseAdmin(conf);
 
 		byte[] tableName = Bytes.toBytes(Schema.TABLE_NAME);
+		byte[] CF;
 
+		HTableDescriptor tableDescriptor = new HTableDescriptor(
+				TableName.valueOf(tableName));
+		
 		for (String columnFamily : new String[] { Schema.CF_HT, Schema.CF_META }) {
-			byte[] CF = Bytes.toBytes(columnFamily);
-			HTableDescriptor tableDescriptor = new HTableDescriptor(
-					TableName.valueOf(tableName));
+			
+			CF = Bytes.toBytes(columnFamily);
+			
 			HColumnDescriptor family = new HColumnDescriptor(CF);
 			tableDescriptor.addFamily(family);
 
@@ -59,16 +61,13 @@ public class TweetsHTable {
 
 	public void insertRecords(String filePath) throws IOException {
 
-		IWindowSummaryReader summaryReader = new WindowSummaryFileReader(
-				filePath);
+		IWindowSummaryReader summaryReader = new WindowSummaryFileReader(filePath);
 		WindowSummary windowSummary;
-
 		byte[] CF;
 		byte[] rowKey;
-//		byte[] column;
-//		byte[] value;
 		Put put;
-		HTable table = new HTable(HBaseConfiguration.create(), Bytes.toBytes(Schema.TABLE_NAME));
+		HTable table = new HTable(this.conf, Bytes.toBytes(Schema.TABLE_NAME));
+		long count = 0;
 		
 		while ((windowSummary = summaryReader.next()) != null) {
 			
@@ -87,7 +86,10 @@ public class TweetsHTable {
 			
 			put.add(CF, Bytes.toBytes(Schema.COLUMN_META_LANG), Bytes.toBytes(windowSummary.getLanguage()));
 			table.put(put);
+			count++;
 		}
+		
+		LOGGER.info(String.format("Inserted %d records", count));
 
 		table.close();
 	}

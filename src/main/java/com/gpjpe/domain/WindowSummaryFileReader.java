@@ -60,8 +60,13 @@ public class WindowSummaryFileReader implements IWindowSummaryReader {
 					windowSummary.setLanguage(tokens[i]);
 					break;
 				default:
-					hashTagCount
-							.put(tokens[i], Integer.parseInt(tokens[i + 1]));
+			
+					int count = Integer.parseInt(tokens[i + 1]);
+					
+					if (count > 0) {
+						hashTagCount.put(tokens[i], count);						
+					}
+
 					i++;
 					break;
 				}
