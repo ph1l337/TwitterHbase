@@ -54,6 +54,12 @@ public class TopQuery {
 
             while (result != null && !result.isEmpty()) {
                 for (Map.Entry<byte[], byte[]> entry : result.getFamilyMap(Bytes.toBytes(Schema.CF_HT)).entrySet()) {
+                    String hashtag = Bytes.toString(entry.getKey());
+                    int count = Bytes.toInt(entry.getValue());
+                    if (hashtagCountMap.containsKey(hashtag)){
+                        count += hashtagCountMap.get(hashtag);
+                    }
+                    hashtagCountMap.put(hashtag,count);
                     hashtagCountMap.put(Bytes.toString(entry.getKey()), Bytes.toInt(entry.getValue()));
                 }
 
@@ -138,9 +144,19 @@ public class TopQuery {
 
             while (result != null && !result.isEmpty()) {
                 for (Map.Entry<byte[], byte[]> entry : result.getFamilyMap(Bytes.toBytes(Schema.CF_HT)).entrySet()) {
+                    String lang = Bytes.toString(result.getValue(Bytes.toBytes(Schema.CF_META),Bytes.toBytes(Schema.COLUMN_META_LANG)));
+                    String hashtag = Bytes.toString(entry.getKey());
+                    int count = Bytes.toInt(entry.getValue());
+
+
+                    if(hashtagCountMapMap
+                            .get(lang).containsKey(hashtag)){
+                        count += hashtagCountMapMap.get(lang).get(hashtag);
+                    }
+
                     hashtagCountMapMap
-                            .get(Bytes.toString(result.getValue(Bytes.toBytes(Schema.CF_META),Bytes.toBytes(Schema.COLUMN_META_LANG))))
-                            .put(Bytes.toString(entry.getKey()), Bytes.toInt(entry.getValue()));
+                            .get(lang)
+                            .put(hashtag,count);
                 }
 
                 result = resultScanner.next();
