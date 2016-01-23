@@ -31,11 +31,11 @@ langTimestamp instead of timestampLang. However, this would make range queries b
 ranges of timestamps impossible. The only possible range query would be to retrieve
 all entries of one language.
 
- ####Upsides
- This leads us to the upsides of using the chosen design. It allows for range queries
- by timestamps. Since all three queries to be run require a scan by timestamp this
+####Upsides
+This leads us to the upsides of using the chosen design. It allows for range queries
+by timestamps. Since all three queries to be run require a scan by timestamp this
 increases the performance of the queries. The three queries are the following:
- query set is composed by 3 queries:
+query set is composed by 3 queries:
 
     1. Given a language (lang), do find the Top-N most used words for the given language in a time interval defined with a start and end timestamp. Start and end timestamp are in milliseconds.
     2. Do find the list of Top-N most used words for each language in a time interval defined with the provided start and end timestamp. Start and end timestamp are in milliseconds.
