@@ -1,7 +1,5 @@
 package com.gpjpe.domain;
-
 import com.gpjpe.helpers.HashtagCountComparator;
-import com.gpjpe.helpers.MapUtils;
 import com.gpjpe.helpers.Utils;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
@@ -92,7 +90,6 @@ public class TopQuery {
         }
 
         Utils.writeToFile(sb.toString(),outputFolder,1,outPrefix);
-
 
     }
 
