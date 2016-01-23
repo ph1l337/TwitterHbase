@@ -18,7 +18,6 @@ Finally, we decided to use the following design:
 
 In this schema the rowKey consists of a concat of timestamp and language.
 
-####Downsides
 This design has one major downside when used in an application that frequently
 and in large volumes adds new data. New in this case is referred to more recent
 data, thus data with a higher timestamp. In this scenario only the last table
@@ -31,7 +30,6 @@ langTimestamp instead of timestampLang. However, this would make range queries b
 ranges of timestamps impossible. The only possible range query would be to retrieve
 all entries of one language.
 
-####Upsides
 This leads us to the upsides of using the chosen design. It allows for range queries
 by timestamps. Since all three queries to be run require a scan by timestamp this
 increases the performance of the queries. The three queries are the following:
@@ -42,9 +40,16 @@ query set is composed by 3 queries:
     3. Do find the Top-N most used words and the frequency of each word regardless the language in a time interval defined with the provided start and end timestamp. Start and end timestamp are in milliseconds.
 
 Allowing for range queries by timestamp allows for good performance on all the three queries.
+However, for query 1 and query 2 on the sever side we still scan more data then we need to process
+the query. While this doesn't add to less performance on the application side it still is costly on
+the server side, since more than necessary data is being loaded from HDFS. Still, this was theb best
+solution we could think of. 
+
 Finally, another reason why we chose to decide for timestampLang as rowKey was the fact that
 in this specific application the data is only inserted once and therefore they positive effects of
 more efficient queries outweigh the negative effect of writing the data.
+
+
 
 
 ###Subsequent design decisions
