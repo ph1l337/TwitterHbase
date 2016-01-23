@@ -49,7 +49,7 @@ public class Utils {
 
             writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(
-                            String.format("%s/%s_query%s.log", outputFolder, outPrefix, queryId), true),
+                            String.format("%s/%s_query%s.out", outputFolder, outPrefix, queryId), true),
                     "utf-8"));
 
             writer.write(ouput);
