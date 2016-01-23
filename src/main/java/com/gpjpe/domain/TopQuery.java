@@ -1,6 +1,8 @@
 package com.gpjpe.domain;
 import com.gpjpe.helpers.HashtagCountComparator;
 import com.gpjpe.helpers.Utils;
+import com.gpjpe.helpers.Utils.QueryKey;
+
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.CompareFilter;
@@ -92,6 +94,79 @@ public class TopQuery {
         Utils.writeToFile(sb.toString(),outputFolder,1,outPrefix);
 
     }
+    
+    //TODO: filter out windows
+    public void topHashTagsInTimeRange(int topN, long startTimestamp, long endTimestamp, String outputFolder, String outPrefix) {
+        Map<String, Integer> hashtagCountMap = new HashMap<>();
+        List<HashtagCount> hashtagCountList = new ArrayList<>();
 
+        // Build Scanner and Filter
+        Scan scan = new Scan(
+                Utils.generateKey(startTimestamp, QueryKey.start),
+                Utils.generateKey(endTimestamp, QueryKey.end));
 
+        //Retrieve results and write to hashTags
+        try {
+            ResultScanner resultScanner = table.getScanner(scan);
+            Result result = resultScanner.next();
+            
+            String hashTag;
+            Integer count;
+            while (result != null && !result.isEmpty()) {
+                for (Map.Entry<byte[], byte[]> entry : result.getFamilyMap(Bytes.toBytes(Schema.CF_HT)).entrySet()) {
+                	hashTag = Bytes.toString(entry.getKey());
+                	count = Bytes.toInt(entry.getValue());
+                	
+                	if (hashtagCountMap.containsKey(hashTag)) {
+                		count += hashtagCountMap.get(hashTag);
+                	}
+                	
+                	hashtagCountMap.put(hashTag, count);  
+                }
+
+                result = resultScanner.next();
+            }
+
+        } catch (IOException e) {
+            LOGGER.error(String.valueOf(e));
+            throw new RuntimeException(e);
+        }
+
+        for (String hashtag : hashtagCountMap.keySet()) {
+            hashtagCountList.add(new HashtagCount(hashtag, hashtagCountMap.get(hashtag)));
+        }
+
+        Collections.sort(hashtagCountList, new HashtagCountComparator());
+        Collections.reverse(hashtagCountList);
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < topN; i++){
+            if (i < hashtagCountList.size()) {
+                sb.append(i+1)
+                		.append(",")
+                        .append(hashtagCountList.get(i).getHashtag())
+                        .append(",")
+                        .append(hashtagCountList.get(i).getCount())
+                        .append(",")
+                        .append(startTimestamp)
+                        .append(",")
+                        .append(endTimestamp);
+
+            } else {
+                sb.append(i+1)
+	        		.append(",")
+	                .append("null")
+	                .append(",")
+                    .append("null")
+                    .append(",")
+	                .append(startTimestamp)
+	                .append(",")
+	                .append(endTimestamp);
+            }
+            sb.append("\n");
+        }
+
+        Utils.writeToFile(sb.toString(), outputFolder, 3, outPrefix);    	
+    }
 }

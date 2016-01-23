@@ -1,8 +1,12 @@
 package com.gpjpe;
 
+import com.gpjpe.domain.TopQuery;
 import com.gpjpe.domain.TweetsHTable;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.client.HConnection;
+import org.apache.hadoop.hbase.client.HConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +17,7 @@ import java.util.Arrays;
 public class App {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(App.class.getName());
+    private final static String ID = "05";
 
     public static void usage(){
 
@@ -37,6 +42,9 @@ public class App {
             usage();
             throw new RuntimeException("Invalid number of arguments");
         }
+        
+        Configuration configuration = HBaseConfiguration.create();
+        HConnection connection;
 
         switch (mode){
             case 1:
@@ -44,12 +52,22 @@ public class App {
             case 2:
                 break;
             case 3:
+            	
+            	long startTS = Long.parseLong(args[1]);
+            	long endTS = Long.parseLong(args[2]);
+            	int topN = Integer.parseInt(args[3]);
+            	String outputFolder = args[4];
+            	
+            	connection = HConnectionManager.createConnection(configuration);
+            	TopQuery query = new TopQuery(connection);
+            	
+            	query.topHashTagsInTimeRange(topN, startTS, endTS, outputFolder, ID);
+            	
                 break;
+                
             case 4:
             	
             	String filePath = args[1];
-            	
-                Configuration configuration = HBaseConfiguration.create();
 
                 TweetsHTable tweetsHTable = new TweetsHTable(configuration);
 
