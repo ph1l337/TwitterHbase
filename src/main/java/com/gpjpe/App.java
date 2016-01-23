@@ -17,18 +17,23 @@ public class App {
     public static void usage(){
 
         LOGGER.info(("\nLoad   : ${APP}/hbaseApp.sh mode dataFolder\n" +
-                "Query 1: ${APP}/hbaseApp.sh mode startTS endTS N language outputFolder\n" +
-                "Query 2: ${APP}/hbaseApp.sh mode startTS endTS N language outputFolde\n" +
-                "Query 3: ${APP}/hbaseApp.sh mode startTS endTS N outputFolder"));
+                "Query 1: ${APP}/hbaseApp.sh 1 startTS endTS N language outputFolder\n" +
+                "Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N language outputFolde\n" +
+                "Query 3: ${APP}/hbaseApp.sh 3 startTS endTS N outputFolder"));
     }
 
     public static void main(String[] args) throws IOException {
 
         LOGGER.info(String.format("Received %d arguments", args.length));
-
+        
+        if (args.length < 2) {
+        	usage();
+        	throw new RuntimeException("Invalid number of arguments");
+        }
+        
         int mode = Integer.parseInt(args[0]);
 
-        if (Arrays.asList(new String[]{"2", "5", "6"}).contains(Integer.toString(args.length))){
+        if (!Arrays.asList(new String[]{"2", "5", "6"}).contains(Integer.toString(args.length))){
             usage();
             throw new RuntimeException("Invalid number of arguments");
         }
@@ -41,16 +46,21 @@ public class App {
             case 3:
                 break;
             case 4:
+            	
+            	String filePath = args[1];
+            	
+                Configuration configuration = HBaseConfiguration.create();
+
+                TweetsHTable tweetsHTable = new TweetsHTable(configuration);
+
+                tweetsHTable.initializeSchema(); 
+                
+                tweetsHTable.insertRecords(filePath);
+                
                 break;
             default:
                 usage();
                 throw new RuntimeException(String.format("Unknown mode [%d]", mode));
         }
-
-        Configuration configuration = HBaseConfiguration.create();
-
-        TweetsHTable tweetsHTable = new TweetsHTable(configuration);
-
-        tweetsHTable.initializeSchema();
     }
 }

@@ -41,7 +41,7 @@ public class TopQuery {
                 Utils.generateKey(endTimestamp, lang));
         Filter f = new SingleColumnValueFilter(
                 Bytes.toBytes(Schema.CF_META),
-                Bytes.toBytes(Schema.COLUMN_HT_LANG),
+                Bytes.toBytes(Schema.COLUMN_META_LANG),
                 CompareFilter.CompareOp.EQUAL,
                 Bytes.toBytes(lang));
         scan.setFilter(f);
