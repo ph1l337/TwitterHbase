@@ -21,8 +21,8 @@ public class TestWindowReader extends TestCase {
 	public void setUp() throws IOException {
 		
 		summaries = new Object[][]{
-			new Object[] {1453500000L, "en", "A", 44L, "B", 16L, "C", 50L},
-			new Object[] {1453500000L, "en", "E", 323L, "F", 161L, "G", 20L}
+			new Object[] {1453500000L, "en", "A", 44, "B", 16, "C", 50},
+			new Object[] {1453500000L, "en", "E", 323, "F", 161, "G", 20}
 		};
 		
 		this.file = File.createTempFile(this.getClass().getName(), ".tmp");		

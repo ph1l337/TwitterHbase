@@ -6,7 +6,7 @@ public class WindowSummary {
 	
 	Long window;
 	String language;
-	Map<String, Long> hashTagCountMap;	
+	Map<String, Integer> hashTagCountMap;	
 	
 	public Long getWindow() {
 		return window;
@@ -24,18 +24,18 @@ public class WindowSummary {
 		this.language = language;
 	}
 
-	public Map<String, Long> getHashTagCountMap() {
+	public Map<String, Integer> getHashTagCountMap() {
 		return hashTagCountMap;
 	}
 
-	public void setHashTagCountMap(Map<String, Long> hashTagCounts) {
+	public void setHashTagCountMap(Map<String, Integer> hashTagCounts) {
 		this.hashTagCountMap = hashTagCounts;
 	}
 	
 	public WindowSummary() {}
 	
 	public WindowSummary(Long window, String language,
-			Map<String, Long> hashTagCounts) {
+			Map<String, Integer> hashTagCounts) {
 		super();
 		this.window = window;
 		this.language = language;

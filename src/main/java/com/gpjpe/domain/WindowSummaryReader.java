@@ -37,7 +37,7 @@ public class WindowSummaryReader {
 		
 		String[] tokens = line.split(",");
 		WindowSummary windowSummary = new WindowSummary();
-		Map<String, Long> hashTagCount = new HashMap<String, Long>();
+		Map<String, Integer> hashTagCount = new HashMap<String, Integer>();
 		
 		if (tokens.length % 2 != 0) {
 			throw new RuntimeException(String.format("Unexpected line contents: [%s]", line));
@@ -52,7 +52,7 @@ public class WindowSummaryReader {
 				windowSummary.setLanguage(tokens[i]);
 				break;
 			default:
-				hashTagCount.put(tokens[i], Long.parseLong(tokens[i+1]));
+				hashTagCount.put(tokens[i], Integer.parseInt(tokens[i+1]));
 				i++;
 				break;
 			}
