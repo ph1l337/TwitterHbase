@@ -60,7 +60,7 @@ public class TopQuery {
                         count += hashtagCountMap.get(hashtag);
                     }
                     hashtagCountMap.put(hashtag,count);
-                    hashtagCountMap.put(Bytes.toString(entry.getKey()), Bytes.toInt(entry.getValue()));
+//                    hashtagCountMap.put(Bytes.toString(entry.getKey()), Bytes.toInt(entry.getValue()));
                 }
 
                 result = resultScanner.next();
@@ -147,7 +147,6 @@ public class TopQuery {
                     String lang = Bytes.toString(result.getValue(Bytes.toBytes(Schema.CF_META),Bytes.toBytes(Schema.COLUMN_META_LANG)));
                     String hashtag = Bytes.toString(entry.getKey());
                     int count = Bytes.toInt(entry.getValue());
-
 
                     if(hashtagCountMapMap
                             .get(lang).containsKey(hashtag)){
