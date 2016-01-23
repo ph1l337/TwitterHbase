@@ -1,3 +1,4 @@
+package com.gpjpe;
 import com.gpjpe.helpers.Utils;
 import junit.framework.TestCase;
 import org.apache.hadoop.hbase.util.Bytes;
