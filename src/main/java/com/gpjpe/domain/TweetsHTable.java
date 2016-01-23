@@ -1,23 +1,20 @@
 package com.gpjpe.domain;
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.util.Bytes;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 
 public class TweetsHTable {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TweetsHTable.class.getName());
-
 
     private Configuration conf;
 
@@ -45,5 +42,7 @@ public class TweetsHTable {
             LOGGER.info("Creating table " + Bytes.toString(tableDescriptor.getName()));
             admin.createTable(tableDescriptor);
         }
+        
+        admin.close();
     }
 }
