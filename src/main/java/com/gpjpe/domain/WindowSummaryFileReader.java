@@ -57,14 +57,14 @@ public class WindowSummaryFileReader implements IWindowSummaryReader {
 					windowSummary.setWindow(Long.parseLong(tokens[i]));
 					break;
 				case 1:
-					windowSummary.setLanguage(tokens[i]);
+					windowSummary.setLanguage(tokens[i].trim());
 					break;
 				default:
 			
 					int count = Integer.parseInt(tokens[i + 1]);
 					
 					if (count > 0) {
-						hashTagCount.put(tokens[i], count);						
+						hashTagCount.put(tokens[i].trim(), count);						
 					}
 
 					i++;
