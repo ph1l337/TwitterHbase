@@ -17,9 +17,9 @@ public class App {
     public static void usage(){
 
         LOGGER.info(("\nLoad   : ${APP}/hbaseApp.sh mode dataFolder\n" +
-                "Query 1: ${APP}/hbaseApp.sh mode startTS endTS N language outputFolder\n" +
-                "Query 2: ${APP}/hbaseApp.sh mode startTS endTS N language outputFolde\n" +
-                "Query 3: ${APP}/hbaseApp.sh mode startTS endTS N outputFolder"));
+                "Query 1: ${APP}/hbaseApp.sh 1 startTS endTS N language outputFolder\n" +
+                "Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N language outputFolde\n" +
+                "Query 3: ${APP}/hbaseApp.sh 3 startTS endTS N outputFolder"));
     }
 
     public static void main(String[] args) throws IOException {
@@ -40,6 +40,12 @@ public class App {
 
         switch (mode){
             case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
             	
             	String filePath = args[1];
             	
@@ -50,13 +56,7 @@ public class App {
                 tweetsHTable.initializeSchema(); 
                 
                 tweetsHTable.insertRecords(filePath);
-            	
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
+                
                 break;
             default:
                 usage();
