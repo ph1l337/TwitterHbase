@@ -32,7 +32,7 @@ public class TopQuery {
 
     }    
 
-    public void query1(String lang, int topN, long startTimestamp, long endTimestamp, String outputFolder, String outPrefix) {
+    public void topHashTagsForLanguageWithinTimRange(String lang, int topN, long startTimestamp, long endTimestamp, String outputFolder, String outPrefix) {
         Map<String, Integer> hashtagCountMap = new HashMap<>();
         List<HashtagCount> hashtagCountList = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class TopQuery {
 
     }
     
-    public void query2(String[] langs, int topN, long startTimestamp, long endTimestamp, String outputFolder, String outPrefix) {
+    public void topHashTagsForLanguagesInTimeRange(String[] langs, int topN, long startTimestamp, long endTimestamp, String outputFolder, String outPrefix) {
         Map<String,Map<String, Integer>> hashtagCountMapMap = new HashMap<>();
         Map<String,List<HashtagCount>>hashtagCountListMap = new HashMap<>();
 

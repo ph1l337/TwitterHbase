@@ -64,7 +64,7 @@ public class App {
             	connection = HConnectionManager.createConnection(configuration);
             	query = new TopQuery(connection);
             	
-            	query.query1(language, topN, startTS, endTS, outputFolder, ID);
+            	query.topHashTagsForLanguageWithinTimRange(language, topN, startTS, endTS, outputFolder, ID);
             	
                 break;
                 
@@ -79,7 +79,7 @@ public class App {
             	connection = HConnectionManager.createConnection(configuration);
             	query = new TopQuery(connection);
             	
-            	query.query2(languages, topN, startTS, endTS, outputFolder, ID);            	
+            	query.topHashTagsForLanguagesInTimeRange(languages, topN, startTS, endTS, outputFolder, ID);            	
             	
                 break;
                 
