@@ -23,7 +23,7 @@ public class App {
 
         LOGGER.info(("\nLoad   : ${APP}/hbaseApp.sh mode dataFolder\n" +
                 "Query 1: ${APP}/hbaseApp.sh 1 startTS endTS N language outputFolder\n" +
-                "Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N language outputFolde\n" +
+                "Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N lang-1,lang-2,lang-3 outputFolder\n" +
                 "Query 3: ${APP}/hbaseApp.sh 3 startTS endTS N outputFolder"));
     }
 
@@ -45,21 +45,53 @@ public class App {
         
         Configuration configuration = HBaseConfiguration.create();
         HConnection connection;
+        
+        long startTS;
+        long endTS;
+        String outputFolder;
+        int topN;
+        TopQuery query;
 
         switch (mode){
             case 1:
-                break;
-            case 2:
-                break;
-            case 3:
             	
-            	long startTS = Long.parseLong(args[1]);
-            	long endTS = Long.parseLong(args[2]);
-            	int topN = Integer.parseInt(args[3]);
-            	String outputFolder = args[4];
+            	startTS = Long.parseLong(args[1]);
+            	endTS = Long.parseLong(args[2]);
+            	topN = Integer.parseInt(args[3]);
+            	String language = args[4];
+            	outputFolder = args[5];
             	
             	connection = HConnectionManager.createConnection(configuration);
-            	TopQuery query = new TopQuery(connection);
+            	query = new TopQuery(connection);
+            	
+            	query.query1(language, topN, startTS, endTS, outputFolder, ID);
+            	
+                break;
+                
+            case 2:
+            	
+            	startTS = Long.parseLong(args[1]);
+            	endTS = Long.parseLong(args[2]);
+            	topN = Integer.parseInt(args[3]);
+            	String[] languages = args[4].split(",");
+            	outputFolder = args[5];
+            	
+            	connection = HConnectionManager.createConnection(configuration);
+            	query = new TopQuery(connection);
+            	
+            	query.query2(languages, topN, startTS, endTS, outputFolder, ID);            	
+            	
+                break;
+                
+            case 3:
+            	
+            	startTS = Long.parseLong(args[1]);
+            	endTS = Long.parseLong(args[2]);
+            	topN = Integer.parseInt(args[3]);
+            	outputFolder = args[4];
+            	
+            	connection = HConnectionManager.createConnection(configuration);
+            	query = new TopQuery(connection);
             	
             	query.topHashTagsInTimeRange(topN, startTS, endTS, outputFolder, ID);
             	
@@ -76,6 +108,7 @@ public class App {
                 tweetsHTable.insertRecords(filePath);
                 
                 break;
+                
             default:
                 usage();
                 throw new RuntimeException(String.format("Unknown mode [%d]", mode));

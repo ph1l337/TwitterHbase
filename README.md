@@ -31,6 +31,6 @@ java -jar {$PATHTO}/TwitterHBase-1.0-SNAPSHOT-jar-with-dependencies.jar 4 {PATH_
 Insertion should take a little while, depending on your data volume. Once data is inserted, you can run the queries on the data:
 
   - Query 1: ${APP}/hbaseApp.sh 1 startTS endTS N language outputFolder
-  - Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N language outputFolder
+  - Query 2: ${APP}/hbaseApp.sh 2 startTS endTS N lang-1,lang-2,lang-3 outputFolder
   - Query 3: ${APP}/hbaseApp.sh 3 startTS endTS N outputFolder
 
