@@ -75,16 +75,24 @@ public class TopQuery {
         for (int i = 0; i < topN; i++){
             if (i < hashtagCountList.size()) {
                 sb.append(lang)
+                        .append(",")
                         .append(i+1)
+                        .append(",")
                         .append(hashtagCountList.get(i).getHashtag())
+                        .append(",")
                         .append(startTimestamp)
+                        .append(",")
                         .append(endTimestamp);
 
             } else {
                 sb.append(lang)
+                        .append(",")
                         .append(i+1)
+                        .append(",")
                         .append("null")
+                        .append(",")
                         .append(startTimestamp)
+                        .append(",")
                         .append(endTimestamp);
             }
             sb.append("\n");
@@ -157,16 +165,24 @@ public class TopQuery {
             for (int i = 0; i < topN; i++){
                 if (i < hashtagCountListMap.get(lang).size()) {
                     sb.append(lang)
+                            .append(",")
                             .append(i+1)
+                            .append(",")
                             .append(hashtagCountListMap.get(lang).get(i).getHashtag())
+                            .append(",")
                             .append(startTimestamp)
+                            .append(",")
                             .append(endTimestamp);
 
                 } else {
                     sb.append(lang)
+                            .append(",")
                             .append(i+1)
+                            .append(",")
                             .append("null")
+                            .append(",")
                             .append(startTimestamp)
+                            .append(",")
                             .append(endTimestamp);
                 }
                 sb.append("\n");
