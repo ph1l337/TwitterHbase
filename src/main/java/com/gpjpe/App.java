@@ -99,13 +99,13 @@ public class App {
                 
             case 4:
             	
-            	String filePath = args[1];
+            	String folderPath = args[1];
 
                 TweetsHTable tweetsHTable = new TweetsHTable(configuration);
 
                 tweetsHTable.initializeSchema(); 
                 
-                tweetsHTable.insertRecords(filePath);
+                tweetsHTable.insertRecordsFromFolder(folderPath);
                 
                 break;
                 

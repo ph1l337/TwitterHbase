@@ -1,5 +1,6 @@
 package com.gpjpe.domain;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,11 @@ public class TweetsHTable {
 
 		HTableDescriptor tableDescriptor = new HTableDescriptor(
 				TableName.valueOf(tableName));
-		
+
 		for (String columnFamily : new String[] { Schema.CF_HT, Schema.CF_META }) {
-			
+
 			CF = Bytes.toBytes(columnFamily);
-			
+
 			HColumnDescriptor family = new HColumnDescriptor(CF);
 			tableDescriptor.addFamily(family);
 
@@ -61,9 +62,10 @@ public class TweetsHTable {
 		admin.close();
 	}
 
-	public void insertRecords(String filePath) throws IOException {
+	public void insertRecordsFromFile(String filePath) throws IOException {
 
-		IWindowSummaryReader summaryReader = new WindowSummaryFileReader(filePath);
+		IWindowSummaryReader summaryReader = new WindowSummaryFileReader(
+				filePath);
 		WindowSummary windowSummary;
 		byte[] CF;
 		byte[] rowKey;
@@ -72,38 +74,106 @@ public class TweetsHTable {
 		List<Put> puts = new ArrayList<Put>();
 		long batchSize = 1000;
 		long count = 0;
-		
+
 		while ((windowSummary = summaryReader.next()) != null) {
-			
-			//row key
+
+			// row key
 			CF = Bytes.toBytes(Schema.CF_HT);
-			rowKey = Utils.generateKey(windowSummary.getWindow(), windowSummary.getLanguage());
-			
+			rowKey = Utils.generateKey(windowSummary.getWindow(),
+					windowSummary.getLanguage());
+
 			put = new Put(rowKey);
-			
-			//hash tags
-			for(Map.Entry<String, Integer> entry: windowSummary.getHashTagCountMap().entrySet()) {
-				put.add(CF, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+
+			// hash tags
+			for (Map.Entry<String, Integer> entry : windowSummary
+					.getHashTagCountMap().entrySet()) {
+				put.add(CF, Bytes.toBytes(entry.getKey()),
+						Bytes.toBytes(entry.getValue()));
 			}
-			
+
 			CF = Bytes.toBytes(Schema.CF_META);
-			
-			put.add(CF, Bytes.toBytes(Schema.COLUMN_META_LANG), Bytes.toBytes(windowSummary.getLanguage()));
+
+			put.add(CF, Bytes.toBytes(Schema.COLUMN_META_LANG),
+					Bytes.toBytes(windowSummary.getLanguage()));
 			puts.add(put);
-			
+
 			if (count % batchSize == 0) {
 				table.put(puts);
 				table.flushCommits();
 				puts.clear();
 			}
-			
+
 			count++;
 		}
-		
+
 		if (puts.size() > 0) {
 			table.put(puts);
 			table.flushCommits();
-			puts.clear();			
+			puts.clear();
+		}
+
+		LOGGER.info(String.format("Inserted %d records", count));
+
+		table.close();
+	}
+
+	public void insertRecordsFromFolder(String folderPath) throws IOException {
+
+		IWindowSummaryReader summaryReader;
+		WindowSummary windowSummary;
+		byte[] CF;
+		byte[] rowKey;
+		Put put;
+		HTable table = new HTable(this.conf, Bytes.toBytes(Schema.TABLE_NAME));
+		List<Put> puts = new ArrayList<Put>();
+		long batchSize = 1000;
+		long count = 0;
+
+		File folder = new File(folderPath);
+
+		for (File file : folder.listFiles()) {
+
+			if (file.isFile()) {
+
+				summaryReader = new WindowSummaryFileReader(
+						file.getAbsolutePath());
+				while ((windowSummary = summaryReader.next()) != null) {
+
+					// row key
+					CF = Bytes.toBytes(Schema.CF_HT);
+					rowKey = Utils.generateKey(windowSummary.getWindow(),
+							windowSummary.getLanguage());
+
+					put = new Put(rowKey);
+
+					// hash tags
+					for (Map.Entry<String, Integer> entry : windowSummary
+							.getHashTagCountMap().entrySet()) {
+						put.add(CF, Bytes.toBytes(entry.getKey()),
+								Bytes.toBytes(entry.getValue()));
+					}
+
+					CF = Bytes.toBytes(Schema.CF_META);
+
+					put.add(CF, Bytes.toBytes(Schema.COLUMN_META_LANG),
+							Bytes.toBytes(windowSummary.getLanguage()));
+					puts.add(put);
+
+					if (count % batchSize == 0) {
+						table.put(puts);
+						table.flushCommits();
+						puts.clear();
+					}
+
+					count++;
+				}
+
+				if (puts.size() > 0) {
+					table.put(puts);
+					table.flushCommits();
+					puts.clear();
+				}
+			}
 		}
 		
 		LOGGER.info(String.format("Inserted %d records", count));
