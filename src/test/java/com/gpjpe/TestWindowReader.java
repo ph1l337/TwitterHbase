@@ -10,7 +10,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import com.gpjpe.domain.WindowSummary;
-import com.gpjpe.domain.WindowSummaryReader;
+import com.gpjpe.domain.WindowSummaryFileReader;
 
 public class TestWindowReader extends TestCase {
 	
@@ -68,7 +68,7 @@ public class TestWindowReader extends TestCase {
 	
 	public void testReadingWindowFile() throws IOException {
 		
-		WindowSummaryReader windowSummaryReader = new WindowSummaryReader(this.file.getAbsolutePath());
+		WindowSummaryFileReader windowSummaryReader = new WindowSummaryFileReader(this.file.getAbsolutePath());
 		WindowSummary summary;
 		
 		for(int i = 0; i < summaries.length; i++) {
