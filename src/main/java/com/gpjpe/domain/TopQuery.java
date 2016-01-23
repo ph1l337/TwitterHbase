@@ -60,7 +60,6 @@ public class TopQuery {
                         count += hashtagCountMap.get(hashtag);
                     }
                     hashtagCountMap.put(hashtag,count);
-//                    hashtagCountMap.put(Bytes.toString(entry.getKey()), Bytes.toInt(entry.getValue()));
                 }
 
                 result = resultScanner.next();
@@ -70,14 +69,26 @@ public class TopQuery {
             LOGGER.error(String.valueOf(e));
             throw new RuntimeException(e);
         }
-        //Write Results to file
-        for (String hashtag : hashtagCountMap.keySet()) {
-            hashtagCountList.add(new HashtagCount(hashtag, hashtagCountMap.get(hashtag)));
+        
+        //Fill HashTagCount List
+        Iterator<Map.Entry<String, Integer>> iter = hashtagCountMap.entrySet().iterator();
+        Map.Entry<String, Integer> entry;
+        
+        while (iter.hasNext()) {
+            entry = iter.next();
+            hashtagCountList.add(new HashtagCount(entry.getKey(), entry.getValue()));
+            iter.remove();
         }
-
+        
+//        for (String hashtag : hashtagCountMap.keySet()) {
+//            hashtagCountList.add(new HashtagCount(hashtag, hashtagCountMap.get(hashtag)));
+//        }
+        
+        //Sort hash tags
         Collections.sort(hashtagCountList, new HashtagCountComparator());
         Collections.reverse(hashtagCountList);
-
+        
+        //Write to file
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < topN; i++){
@@ -167,14 +178,30 @@ public class TopQuery {
         }
 
         StringBuilder sb = new StringBuilder();
+        
+        Iterator<Map.Entry<String, Integer>> iter;// = hashtagCountMap.entrySet().iterator();
+        Map.Entry<String, Integer> entry;
+        
+       
 
         //Write results to File
         for (String lang : hashtagCountMapMap.keySet()){
-            for (String hashtag : hashtagCountMapMap.get(lang).keySet()) {
+        	
+        	iter = hashtagCountMapMap.get(lang).entrySet().iterator();
+        	
+            while (iter.hasNext()) {
+                entry = iter.next();
                 hashtagCountListMap
-                        .get(lang)
-                        .add(new HashtagCount(hashtag, hashtagCountMapMap.get(lang).get(hashtag)));
-            }
+                .get(lang)
+                .add(new HashtagCount(entry.getKey(), entry.getValue()));                
+                iter.remove();
+            } 
+            
+//            for (String hashtag : hashtagCountMapMap.get(lang).keySet()) {
+//                hashtagCountListMap
+//                        .get(lang)
+//                        .add(new HashtagCount(hashtag, hashtagCountMapMap.get(lang).get(hashtag)));
+//            }
 
             Collections.sort(hashtagCountListMap.get(lang), new HashtagCountComparator());
             Collections.reverse(hashtagCountListMap.get(lang));
@@ -246,9 +273,18 @@ public class TopQuery {
             throw new RuntimeException(e);
         }
 
-        for (String hashtag : hashtagCountMap.keySet()) {
-            hashtagCountList.add(new HashtagCount(hashtag, hashtagCountMap.get(hashtag)));
+        Iterator<Map.Entry<String, Integer>> iter = hashtagCountMap.entrySet().iterator();
+        Map.Entry<String, Integer> entry;
+        
+        while (iter.hasNext()) {
+            entry = iter.next();
+            hashtagCountList.add(new HashtagCount(entry.getKey(), entry.getValue()));
+            iter.remove();
         }
+        
+//        for (String hashtag : hashtagCountMap.keySet()) {
+//            hashtagCountList.add(new HashtagCount(hashtag, hashtagCountMap.get(hashtag)));
+//        }
 
         Collections.sort(hashtagCountList, new HashtagCountComparator());
         Collections.reverse(hashtagCountList);
