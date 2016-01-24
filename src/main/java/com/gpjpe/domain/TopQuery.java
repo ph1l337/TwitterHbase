@@ -185,7 +185,7 @@ public class TopQuery {
        
 
         //Write results to File
-        for (String lang : hashtagCountMapMap.keySet()){
+        for (String lang : langs){
         	
         	iter = hashtagCountMapMap.get(lang).entrySet().iterator();
         	
