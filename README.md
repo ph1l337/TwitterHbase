@@ -1,8 +1,8 @@
-#Twitter Trends Hbase
+# Twitter Trends Hbase
 *by Guilherme Dinis Jr and Philipp Eisen*
 
 ## Design Decisions for creating the Hbase Schema
-###Row Key
+### Row Key
 
 When designing the schema for the HBase database of our application,
 the most important decision was how we would compose our rowKey. We were thinking
@@ -52,7 +52,7 @@ more efficient queries outweigh the negative effect of writing the data.
 
 
 
-###Subsequent design decisions
+### Subsequent design decisions
 
 In order to perform the required filters for query 1 and 2 our design includes a column
 ``meta.lang`` that contains the language as value.
@@ -64,7 +64,7 @@ retrieved.
 
 
 
-##Running App
+## Running App
 
 First, build it with maven:
 
